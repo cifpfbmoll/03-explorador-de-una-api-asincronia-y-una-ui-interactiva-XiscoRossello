@@ -1,0 +1,166 @@
+<div class="summoner-details">
+  <!-- Header -->
+  <div class="details-header">
+    <div class="header-background"></div>
+    <div class="header-content">
+      <img
+        [src]="getSummonerIconUrl()"
+        [alt]="summoner.name + ' icon'"
+        class="summoner-icon-large"
+        (error)="onImageError($event)"
+      />
+      <div class="summoner-info-large">
+        <h2 class="summoner-name-large">{{ summoner.name }}</h2>
+        <p class="summoner-level-large">Nivel {{ summoner.summonerLevel }}</p>
+        @if (totalMasteryScore() > 0) {
+          <p class="mastery-score">
+            <span class="mastery-icon">🏅</span>
+            {{ formatMasteryPoints(totalMasteryScore()) }} puntos de maestría
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'overview'"
+      (click)="setActiveTab('overview')"
+      type="button"
+    >
+      📊 Resumen
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'champions'"
+      (click)="setActiveTab('champions')"
+      type="button"
+    >
+      ⚔️ Campeones
+    </button>
+    <button
+      class="tab-button"
+      [class.active]="activeTab() === 'matches'"
+      (click)="setActiveTab('matches')"
+      type="button"
+    >
+      🎮 Partidas
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="details-content">
+    @if (activeTab() === 'overview') {
+      <div class="overview-tab">
+        <h3 class="section-title">Clasificación</h3>
+        <div class="ranked-section">
+          @if (getSoloQueueRank(); as soloRank) {
+            <div class="rank-card solo-queue">
+              <h4 class="rank-queue-name">🏆 Solo/Duo</h4>
+              <div class="rank-tier-display">{{ soloRank.tier }} {{ soloRank.rank }}</div>
+              <div class="rank-lp-display">{{ soloRank.leaguePoints }} LP</div>
+              <div class="rank-record">
+                <span class="wins">{{ soloRank.wins }}V</span>
+                <span class="separator">-</span>
+                <span class="losses">{{ soloRank.losses }}D</span>
+              </div>
+              <div class="rank-winrate">
+                {{ calculateWinrate(soloRank.wins, soloRank.losses) }}% WR
+              </div>
+              @if (soloRank.hotStreak) {
+                <div class="hot-streak-badge">🔥 En racha</div>
+              }
+            </div>
+          } @else {
+            <div class="rank-card unranked">
+              <h4 class="rank-queue-name">🏆 Solo/Duo</h4>
+              <div class="rank-tier-display">Sin clasificar</div>
+            </div>
+          }
+
+          @if (getFlexQueueRank(); as flexRank) {
+            <div class="rank-card flex-queue">
+              <h4 class="rank-queue-name">👥 Flex</h4>
+              <div class="rank-tier-display">{{ flexRank.tier }} {{ flexRank.rank }}</div>
+              <div class="rank-lp-display">{{ flexRank.leaguePoints }} LP</div>
+              <div class="rank-record">
+                <span class="wins">{{ flexRank.wins }}V</span>
+                <span class="separator">-</span>
+                <span class="losses">{{ flexRank.losses }}D</span>
+              </div>
+              <div class="rank-winrate">
+                {{ calculateWinrate(flexRank.wins, flexRank.losses) }}% WR
+              </div>
+            </div>
+          } @else {
+            <div class="rank-card unranked">
+              <h4 class="rank-queue-name">👥 Flex</h4>
+              <div class="rank-tier-display">Sin clasificar</div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'champions') {
+      <div class="champions-tab">
+        <h3 class="section-title">Top Campeones</h3>
+        @if (isLoadingMastery()) {
+          <div class="loading-mastery">
+            <div class="loading-spinner-small"></div>
+            <p>Cargando maestría...</p>
+          </div>
+        } @else {
+          <div class="mastery-list">
+            @for (mastery of championMastery(); track mastery.championId) {
+              <div class="mastery-item">
+                <div class="mastery-rank">{{ $index + 1 }}</div>
+                <div class="champion-icon-wrapper">
+                  <img 
+                    [src]="getChampionIconUrl(mastery.championId)" 
+                    [alt]="getChampionName(mastery.championId)"
+                    class="champion-icon"
+                    (error)="onImageError($event)"
+                  />
+                  <span class="champion-level-badge">{{ mastery.championLevel }}</span>
+                </div>
+                <div class="mastery-info">
+                  <div class="champion-name">{{ getChampionName(mastery.championId) }}</div>
+                  <div class="mastery-points">
+                    {{ formatMasteryPoints(mastery.championPoints) }} puntos
+                  </div>
+                  <div class="mastery-tokens">
+                    @if (mastery.tokensEarned > 0) {
+                      <span class="tokens">🎖️ {{ mastery.tokensEarned }} tokens</span>
+                    }
+                  </div>
+                </div>
+                <div class="mastery-level-indicator">
+                  <div class="level-number">Nivel {{ mastery.championLevel }}</div>
+                  @if (mastery.championLevel === 7) {
+                    <div class="mastery-color master">⭐⭐⭐</div>
+                  } @else if (mastery.championLevel >= 5) {
+                    <div class="mastery-color high">⭐⭐</div>
+                  } @else if (mastery.championLevel >= 3) {
+                    <div class="mastery-color medium">⭐</div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (activeTab() === 'matches') {
+      <div class="matches-tab">
+        <app-match-history
+          [summonerPuuid]="summoner.puuid"
+          [region]="region"
+        ></app-match-history>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="search-bar">
+  <div class="search-container">
+    <div class="search-input-group">
+      <label for="summoner-name" class="search-label">
+        <span class="search-icon">🔍</span>
+        Nombre de Invocador
+      </label>
+      <input
+        id="summoner-name"
+        type="text"
+        class="search-input"
+        [value]="summonerName()"
+        (input)="updateSummonerName($event)"
+        (keypress)="handleKeyPress($event)"
+        placeholder="Riot ID (nombre#tagline): Parragons#EUW, Faker#KR1..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="region-select-group">
+      <label for="region" class="search-label">
+        <span class="region-icon">🌍</span>
+        Región
+      </label>
+      <select
+        id="region"
+        class="region-select"
+        [value]="selectedRegion()"
+        (change)="updateRegion($event)"
+      >
+        @for (region of regions; track region.code) {
+          <option [value]="region.code">
+            {{ region.name }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <button
+      class="search-button"
+      (click)="handleSearch()"
+      [disabled]="!summonerName().trim()"
+      type="button"
+    >
+      <span class="button-icon">⚔️</span>
+      Buscar
+    </button>
+  </div>
+</div>

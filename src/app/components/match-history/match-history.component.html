@@ -1,0 +1,116 @@
+<div class="match-history">
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando historial de partidas...</p>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-container">
+      <div class="error-icon">⚠️</div>
+      <p class="error-message">{{ errorMessage() }}</p>
+      <button class="retry-button" (click)="reload()" type="button">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  @if (!isLoading() && !errorMessage() && matches().length === 0) {
+    <div class="no-matches">
+      <div class="no-matches-icon">🎮</div>
+      <p class="no-matches-text">No hay partidas recientes</p>
+    </div>
+  }
+
+  @if (!isLoading() && !errorMessage() && matches().length > 0) {
+    <div class="matches-list">
+      @for (matchDisplay of matches(); track matchDisplay.match.metadata.matchId) {
+        <div class="match-item" [class.win]="matchDisplay.participant.win" [class.loss]="!matchDisplay.participant.win">
+          <!-- Match Result -->
+          <div class="match-result">
+            <div class="result-badge" [class.win]="matchDisplay.participant.win">
+              {{ matchDisplay.participant.win ? 'VICTORIA' : 'DERROTA' }}
+            </div>
+            <div class="match-info-small">
+              <div class="game-mode">{{ getGameMode(matchDisplay.match.info.queueId) }}</div>
+              <div class="game-time">{{ formatGameDate(matchDisplay.gameDate) }}</div>
+              <div class="game-duration">{{ formatGameDuration(matchDisplay.gameDurationMin) }}</div>
+            </div>
+          </div>
+
+          <!-- Champion -->
+          <div class="match-champion">
+            <div class="champion-icon-container">
+              <img
+                [src]="getChampionIconUrl(matchDisplay.participant.championName)"
+                [alt]="matchDisplay.participant.championName"
+                class="champion-icon"
+                (error)="onChampionImageError($event)"
+              />
+              <div class="champion-level">{{ matchDisplay.participant.champLevel }}</div>
+            </div>
+            <div class="champion-name">{{ matchDisplay.participant.championName }}</div>
+          </div>
+
+          <!-- KDA -->
+          <div class="match-kda">
+            <div class="kda-score">
+              <span class="kills">{{ matchDisplay.participant.kills }}</span>
+              <span class="separator">/</span>
+              <span class="deaths">{{ matchDisplay.participant.deaths }}</span>
+              <span class="separator">/</span>
+              <span class="assists">{{ matchDisplay.participant.assists }}</span>
+            </div>
+            <div class="kda-ratio" [class]="getKDAClass(matchDisplay.participant)">
+              {{ calculateKDA(matchDisplay.participant) }} KDA
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="match-stats">
+            <div class="stat-item">
+              <span class="stat-label">CS</span>
+              <span class="stat-value">{{ matchDisplay.participant.totalMinionsKilled + matchDisplay.participant.neutralMinionsKilled }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Oro</span>
+              <span class="stat-value">{{ (matchDisplay.participant.goldEarned / 1000).toFixed(1) }}k</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Daño</span>
+              <span class="stat-value">{{ (matchDisplay.participant.totalDamageDealtToChampions / 1000).toFixed(1) }}k</span>
+            </div>
+          </div>
+
+          <!-- Items -->
+          <div class="match-items">
+            @for (itemId of getItems(matchDisplay.participant); track itemId) {
+              <div class="item-slot">
+                <img
+                  [src]="getItemIconUrl(itemId)"
+                  [alt]="'Item ' + itemId"
+                  class="item-icon"
+                  (error)="onItemImageError($event)"
+                />
+              </div>
+            }
+            @if (getItems(matchDisplay.participant).length === 0) {
+              <div class="no-items">Sin items</div>
+            }
+          </div>
+
+          <!-- Team Performance -->
+          <div class="match-team">
+            <div class="team-label">Equipo</div>
+            <div class="team-score">
+              <span class="team-kills">
+                {{ getTeamKills(matchDisplay.match, matchDisplay.participant.teamId) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

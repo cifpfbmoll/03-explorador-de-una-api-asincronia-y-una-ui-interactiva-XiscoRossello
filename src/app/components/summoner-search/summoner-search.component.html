@@ -1,0 +1,89 @@
+<div class="summoner-search">
+  <app-search-bar
+    (onSearch)="handleSearch($event)"
+    (onRegionChange)="handleRegionChange($event)"
+  ></app-search-bar>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Buscando invocador...</p>
+      <p class="loading-subtext">Consultando la API de Riot Games</p>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-container">
+      <div class="error-icon">⚠️</div>
+      <h3 class="error-title">Error en la búsqueda</h3>
+      <p class="error-message">{{ errorMessage() }}</p>
+      <button class="retry-button" (click)="clearSearch()" type="button">
+        Intentar de nuevo
+      </button>
+    </div>
+  }
+
+  @if (summoners().length > 0 && !isLoading() && !errorMessage()) {
+    <div class="results-container">
+      <div class="results-header">
+        <h2 class="results-title">
+          <span class="results-icon">✨</span>
+          Resultados de la búsqueda
+        </h2>
+        <button class="clear-button" (click)="clearSearch()" type="button">
+          <span>🔄</span> Nueva búsqueda
+        </button>
+      </div>
+      
+      <div class="summoners-grid">
+        @for (summoner of summoners(); track summoner.id) {
+          <app-summoner-card
+            [summoner]="summoner"
+            [region]="selectedRegion()"
+            (onViewDetails)="handleViewDetails($event)"
+          ></app-summoner-card>
+        }
+      </div>
+    </div>
+  }
+
+  @if (!isLoading() && !errorMessage() && summoners().length === 0 && !hasSearched()) {
+    <div class="empty-state">
+      <div class="empty-icon">🎮</div>
+      <h3 class="empty-title">Busca un invocador</h3>
+      <p class="empty-text">Ingresa el nombre de un invocador y su región para comenzar</p>
+      <div class="empty-suggestions">
+        <p class="suggestions-title">Ejemplos populares:</p>
+        <div class="suggestions-list">
+          <span class="suggestion-chip">Faker</span>
+          <span class="suggestion-chip">Rekkles</span>
+          <span class="suggestion-chip">Caps</span>
+          <span class="suggestion-chip">Perkz</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading() && !errorMessage() && summoners().length === 0 && hasSearched()) {
+    <div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3 class="no-results-title">No se encontraron resultados</h3>
+      <p class="no-results-text">No se encontró ningún invocador con ese nombre en la región seleccionada</p>
+    </div>
+  }
+
+  <!-- Modal de detalles -->
+  @if (selectedSummoner()) {
+    <div class="modal-overlay" (click)="handleCloseDetails()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="handleCloseDetails()" type="button">
+          ✕
+        </button>
+        <app-summoner-details
+          [summoner]="selectedSummoner()!"
+          [region]="selectedRegion()"
+        ></app-summoner-details>
+      </div>
+    </div>
+  }
+</div>

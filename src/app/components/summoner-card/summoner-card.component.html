@@ -1,0 +1,78 @@
+<div class="summoner-card" (click)="viewDetails()">
+  <div class="card-header">
+    <div class="summoner-icon-wrapper">
+      <img
+        [src]="getSummonerIconUrl()"
+        [alt]="summoner.name + ' icon'"
+        class="summoner-icon"
+        (error)="onImageError($event)"
+      />
+      <div class="summoner-level">{{ summoner.summonerLevel }}</div>
+    </div>
+    <div class="summoner-info">
+      <h3 class="summoner-name">{{ summoner.name }}</h3>
+      <p class="summoner-level-text">Nivel {{ summoner.summonerLevel }}</p>
+    </div>
+  </div>
+
+  <div class="card-body">
+    @if (getSoloQueueRank(); as soloRank) {
+      <div class="rank-section">
+        <h4 class="rank-type">🏆 Solo/Duo</h4>
+        <div class="rank-details" [class]="getRankClass(soloRank.tier)">
+          <div class="rank-tier">{{ getRankDisplay(soloRank) }}</div>
+          <div class="rank-lp">{{ soloRank.leaguePoints }} LP</div>
+          <div class="rank-stats">
+            <span class="wins">{{ soloRank.wins }}V</span>
+            <span class="separator">-</span>
+            <span class="losses">{{ soloRank.losses }}D</span>
+          </div>
+          <div class="winrate" [class.high-winrate]="calculateWinrate(soloRank) >= 55">
+            {{ calculateWinrate(soloRank) }}% WR
+          </div>
+          @if (soloRank.hotStreak) {
+            <div class="hot-streak">🔥 Racha</div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="rank-section unranked">
+        <h4 class="rank-type">🏆 Solo/Duo</h4>
+        <div class="rank-details">
+          <div class="rank-tier">Sin clasificar</div>
+        </div>
+      </div>
+    }
+
+    @if (getFlexQueueRank(); as flexRank) {
+      <div class="rank-section">
+        <h4 class="rank-type">👥 Flex</h4>
+        <div class="rank-details" [class]="getRankClass(flexRank.tier)">
+          <div class="rank-tier">{{ getRankDisplay(flexRank) }}</div>
+          <div class="rank-lp">{{ flexRank.leaguePoints }} LP</div>
+          <div class="rank-stats">
+            <span class="wins">{{ flexRank.wins }}V</span>
+            <span class="separator">-</span>
+            <span class="losses">{{ flexRank.losses }}D</span>
+          </div>
+          <div class="winrate" [class.high-winrate]="calculateWinrate(flexRank) >= 55">
+            {{ calculateWinrate(flexRank) }}% WR
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="rank-section unranked">
+        <h4 class="rank-type">👥 Flex</h4>
+        <div class="rank-details">
+          <div class="rank-tier">Sin clasificar</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="card-footer">
+    <button class="view-details-btn" type="button">
+      Ver Detalles →
+    </button>
+  </div>
+</div>

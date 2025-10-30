@@ -1,0 +1,226 @@
+.summoner-card {
+  background: linear-gradient(135deg, rgba(14, 28, 47, 0.95) 0%, rgba(10, 20, 40, 0.95) 100%);
+  border: 2px solid rgba(200, 155, 60, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.summoner-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px rgba(200, 155, 60, 0.4);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(200, 155, 60, 0.2);
+}
+
+.summoner-icon-wrapper {
+  position: relative;
+}
+
+.summoner-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--accent-color);
+  box-shadow: 0 0 15px rgba(200, 155, 60, 0.3);
+}
+
+.summoner-level {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-color);
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.summoner-info {
+  flex: 1;
+}
+
+.summoner-name {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.summoner-level-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rank-section {
+  background: rgba(10, 20, 40, 0.5);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(200, 155, 60, 0.2);
+}
+
+.rank-section.unranked {
+  opacity: 0.6;
+}
+
+.rank-type {
+  color: var(--accent-color);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rank-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rank-tier {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Colores por rango */
+.rank-details.iron .rank-tier { color: #6d6868; }
+.rank-details.bronze .rank-tier { color: #cd7f32; }
+.rank-details.silver .rank-tier { color: #c0c0c0; }
+.rank-details.gold .rank-tier { color: #ffd700; }
+.rank-details.platinum .rank-tier { color: #00c9a7; }
+.rank-details.emerald .rank-tier { color: #50c878; }
+.rank-details.diamond .rank-tier { color: #b9f2ff; }
+.rank-details.master .rank-tier { color: #e652f9; }
+.rank-details.grandmaster .rank-tier { color: #ff4444; }
+.rank-details.challenger .rank-tier { color: #f4c430; }
+
+.rank-lp {
+  color: var(--accent-color);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.rank-stats {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.wins {
+  color: #00d4aa;
+  font-weight: 600;
+}
+
+.losses {
+  color: #ff4458;
+  font-weight: 600;
+}
+
+.separator {
+  color: var(--text-secondary);
+}
+
+.winrate {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.winrate.high-winrate {
+  color: #00d4aa;
+}
+
+.hot-streak {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff4458 0%, #ff8800 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  margin-top: 0.25rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.card-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(200, 155, 60, 0.2);
+}
+
+.view-details-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(200, 155, 60, 0.2);
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-details-btn:hover {
+  background: var(--accent-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(200, 155, 60, 0.4);
+}
+
+@media (max-width: 480px) {
+  .summoner-card {
+    padding: 1rem;
+  }
+
+  .summoner-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .summoner-name {
+    font-size: 1.25rem;
+  }
+
+  .rank-tier {
+    font-size: 1rem;
+  }
+}
